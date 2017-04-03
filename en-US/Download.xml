@@ -1,0 +1,227 @@
+<chapter id="chap-sw-repo">
+<title>The CADC Credential Delegation Protocol</title>
+
+<para>The CADC (Canadian Astronomy Data Center) open source software is 
+available on a github repository: 
+</para>
+<screen>
+https://github.com/opencadc
+</screen>
+
+
+<section id="sec-cdp_description">
+<title>Credential Delegation Protocol software description</title>
+
+<para>
+The Credential Delegation Protocol (cdp) module is a client and server 
+implementation of the IVOA Credential Delegation Protocol. 
+</para>
+<para>
+It contains two main modules:
+</para>
+<orderedlist>
+<listitem>
+<para><menuchoice><guimenu>cadc-cdp</guimenu></menuchoice> : 
+Credential Delegation Protocol clients and common model objects and exceptions.</para>
+</listitem>
+<listitem>
+<para><menuchoice><guimenu>cadc-cdp-server</guimenu></menuchoice> :
+Credential Delegation Protocol server and common model objects.</para> 
+</listitem>
+</orderedlist>
+
+</section>
+
+<section id="sec-cdp_sw_repo">
+<title>Credential Delegation Protocol software repository</title>
+
+<para>A copy of the Credential Delegation Protocol can be obtained by:</para>
+<screen>
+git clone https://github.com/opencadc/cdp
+</screen>
+<para>
+This is the main reference repository, but it is often updated and no tags are available, 
+so, a tagged/versioned repo (forked by the main) can be reached at
+</para>
+<para>
+<ulink url="http://www.ict.inaf.it/gitlab/oats-cadc-collab/gitlab/cdp"></ulink>
+</para>
+<para>This guide is relative to the version tagged as v0.2.1</para>
+<para>To work with it, issue:</para>
+<screen>
+git clone https://www.ict.inaf.it/gitlab/OATS-CADC/cdp.git
+git checkout tags/v0.2.1
+</screen>
+<para>or to work on a new local branch:</para>
+<screen>
+git clone https://www.ict.inaf.it/gitlab/OATS-CADC/cdp.git
+git checkout tags/v0.2.1 -b &lt;branch-name&gt;
+</screen>
+
+<para>
+The CADC libraries are highly configurable. In this case, the persistence
+must be customized extending the class 
+<screen>
+org/astrogrid/security/delegation/Delegations.java
+</screen>
+The CADC repository provides an implementation working with in-memory certificates.
+To add a persistence layer, a
+<screen>
+org/astrogrid/security/delegation/DelegationsImpl.java
+</screen>
+has to be provided. An example of it can be reached at:
+<screen>
+https://www.ict.inaf.it/gitlab/OATS-CADC/cdp/blob/master/cadc-cdp-server/
+        src/main/java/org/astrogrid/security/delegation/DelegationsImpl.java
+</screen>
+and using MySql or MaraDb and mantaining the database name equals to "oatscdp",
+it can be used as is.
+</para>
+ <warning>
+   <para>
+Carefull must be taken: if the class org/astrogrid/security/delegation/DelegationsImpl.java
+does not exist in the code, the main operations on certificates ("delegate", "get" and "view") 
+will work anyway by command line, but the created certificates
+will not be persisted and the cases in wich a persisted copy is needed will
+not work.
+   </para>
+ </warning>
+
+</section>
+
+
+<section id="sec-cdp_sw_download">
+<title>Credential Delegation Protocol software build</title>
+
+<para>
+Each software module can be easily built using gradle (a build.gradle 
+file is included in each module).
+</para>
+<para>
+To build versus the newer library version published in
+maven central repository, the build.gradle file must contain 
+cadc dependencies written as:
+</para>
+<screen>
+compile 'org.opencadc:cadc-log:1.+'
+</screen>
+<para>
+To build using a local build of cadc libraries, the file must contain
+cadc dependencies written as:
+</para>
+<screen>
+compile files('/&lt;local-path&gt;/core/cadc-log/build/libs/cadc-log.jar')
+</screen>
+<para>The right order to build opencadc libraries locally is:</para>
+<itemizedlist>
+<listitem>
+<screen>
+core/cadc-util
+</screen>
+</listitem>
+<listitem>
+<screen>
+core/cadc-log
+</screen>
+</listitem>
+<listitem>
+<screen>
+ac/cadc-tomcat
+</screen>
+</listitem>
+<listitem>
+<screen>
+reg/cadc-registry
+</screen>
+</listitem>
+<listitem>
+<screen>
+reg/cadc-vosi
+</screen>
+</listitem>
+<listitem>
+<screen>
+uws/cadc-uws
+</screen>
+</listitem>
+<listitem>
+<screen>
+uws/cadc-uws-server
+</screen>
+</listitem>
+<listitem>
+<screen>
+cdp/cadc-cdp
+</screen>
+</listitem>
+<listitem>
+<screen>
+cdp/cadc-cdp-server
+</screen>
+</listitem>
+</itemizedlist>
+
+</section>
+
+
+<section id="sec-AC_deploy">
+<title>Credential Delegation Service deployment</title>
+
+<para>
+The Credential Delegation Service deployment package can be
+obtained issuing:
+</para>
+<screen>
+git clone https://www.ict.inaf.it/gitlab/OATS-CADC/oats-cred-web.git
+</screen>
+<para>
+The repository contains some files to customize: 
+</para>
+<screen>
+oats-cred-web/src/main/webapp/WEB-INF/web.xml.template
+oats-cred-web/src/main/webapp/META-INF/context.xml.template
+oats-cred-web/src/main/sql/create_cdp_db.sql.template
+oats-ac-web/build.gradle.template
+oats-cred-web/src/main/webapp/capabilities.xml
+</screen>
+<para>
+Each template file contains comments/instructions on how to customize it,
+except build.gradle.template which can be customized, as previously 
+described in <xref linkend="sec-cdp_sw_download"/>, vs. maven central hosted 
+or local libraries.
+</para>
+<para>
+The files context.xml.template and create_cdp_db.sql.template contain
+database connection parameters, so they must be customized accordingly
+and keeping into account the configuration encoded in the class
+DelegationsImpl.java (see <xref linkend="sec-cdp_sw_repo"/>).
+</para>
+<para>
+The file capabilities.xml defines standards and capabilities (e.g., IVOA
+defined interfaces) provided by the service and it must be customized
+accordingly to the local service features.
+</para>
+<para>
+The package compilation produces the <command>cred.war</command> file. It
+can be deployed issuing:</para>
+<screen>
+systemctl stop tomcat
+cp cred.war $TOMCAT_HOME/webapps
+systemctl start tomcat
+</screen>
+<para>
+If some customization is done in the file contained in the deployment 
+location, be careful that the expected behavior of Tomcat is to
+treat the .war file deletion as a request to redeploy or undeploy 
+the application.  
+So, if the war file is deleted until tomcat is
+running, the application is undeployed (removed) by tomcat.
+</para>
+<para>
+If tomcat is stopped before deleting WAR file and started only 
+after that, the application will not be undeployed.
+</para>
+
+</section>
+
+</chapter>
