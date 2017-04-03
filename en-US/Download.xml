@@ -44,7 +44,7 @@ This is the main reference repository, but it is often updated and no tags are a
 so, a tagged/versioned repo (forked by the main) can be reached at
 </para>
 <para>
-<ulink url="http://www.ict.inaf.it/gitlab/oats-cadc-collab/gitlab/cdp"></ulink>
+<ulink url="http://www.ict.inaf.it/gitlab/OATS-CADC/gitlab/cdp"></ulink>
 </para>
 <para>This guide is relative to the version tagged as v0.2.1</para>
 <para>To work with it, issue:</para>
