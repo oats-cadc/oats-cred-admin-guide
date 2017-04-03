@@ -23,7 +23,7 @@ RESTful interface .
 	<section id="sect-Requirements">
 		<title>Requirements and recomendations</title>
                 <para>
-                Prerequisites and recomendations to run the Access Control Service are: 
+                Prerequisites and recomendations to run the Credential Delegation Service are: 
                 </para>
                 <itemizedlist>
                     <listitem>
