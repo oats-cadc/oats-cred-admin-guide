@@ -74,7 +74,7 @@ has to be provided. An example of it can be reached at:
 https://www.ict.inaf.it/gitlab/OATS-CADC/cdp/blob/master/cadc-cdp-server/
         src/main/java/org/astrogrid/security/delegation/DelegationsImpl.java
 </screen>
-and using MySql or MaraDb and mantaining the database name equals to "oatscdp",
+and using MySql or MariaDb and mantaining the database name equals to "oatscdp",
 it can be used as is.
 </para>
  <warning>
@@ -181,7 +181,7 @@ The repository contains some files to customize:
 oats-cred-web/src/main/webapp/WEB-INF/web.xml.template
 oats-cred-web/src/main/webapp/META-INF/context.xml.template
 oats-cred-web/src/main/sql/create_cdp_db.sql.template
-oats-ac-web/build.gradle.template
+oats-cred-web/build.gradle.template
 oats-cred-web/src/main/webapp/capabilities.xml
 </screen>
 <para>
